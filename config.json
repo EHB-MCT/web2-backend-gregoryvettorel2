@@ -1,0 +1,8 @@
+{
+"finalUrl": "mongodb+srv://greg:greg@cluster0.zvpp2.mongodb.net/Coinstack?retryWrites=true&w=majority",
+"username": "greg",
+"password": "greg",
+"db": "Coinstack",
+"collectionList": "CoinstackMyList",
+"collectionPortfolio": "CoinstackMyPortfolio"
+}
