@@ -18,8 +18,6 @@ app.use(bodyParser.urlencoded({
     extended: true
   }));
 
-
-
 //landing page
 app.get('/', (req, res) => {
   res.status(300).redirect('/info.html');
@@ -104,7 +102,7 @@ console.log(req.body);
 
 });
 
-//Delete (works)
+//Delete coin (works)
 app.delete('/list/:uuid', async (req,res) => {
   try {
 
@@ -124,7 +122,84 @@ app.delete('/list/:uuid', async (req,res) => {
   }
 });
 
-//
+
+//ROUTES FOR PORTFOLIO PAGE
+//get portfolio coins (works)
+app.get('/portfolio', async (req,res) => {
+
+  try {
+    //connect to db
+    await client.connect();
+
+    const colli = client.db('Coinstack').collection('CoinstackMyPortfolio');
+    const myList = await colli.find({}).toArray();
+
+    //send back file
+    res.status(200).send(myList);
+  } catch(error){
+    console.log(error);
+    res.status(500).send({
+      error: 'something went wrong',
+      value: error
+    });
+  }finally{
+    await client.close();
+  }
+});
+
+//post new portfolio coin (works)
+app.post('/portfolio', async (req,res) => {
+
+  try {
+    await client.connect();
+
+    const colli = client.db('Coinstack').collection('CoinstackMyPortfolio');
+    
+    let coin = {
+      name: req.body.name,
+      symbol: req.body.symbol,
+      quantity: req.body.quantity,
+      price: req.body.price
+      }
+
+  //insert
+  let insertResult = await colli.insertOne(coin);
+
+  //send error or succes msg
+  }catch(error){
+    console.log(error);
+    res.status(500).send({
+      error: 'something went wrong',
+      value: error
+    });
+  }finally{
+    //res.redirect("");
+    await client.close();
+  }
+});
+
+//delete portfolio coin (works)
+app.delete('/portfolio/:symbol', async (req,res) => {
+  try {
+
+    await client.connect(); 
+
+    const colli = client.db('Coinstack').collection('CoinstackMyPortfolio');
+
+    const symbol = req.params.symbol;
+
+    await colli.deleteOne({
+      symbol
+    })
+
+  }finally{
+    console.log("deleted")
+    await client.close()
+  }
+
+});
+
+//to do
 app.put('/', async (req,res) => {
   try {
     await client.connect();
@@ -151,29 +226,6 @@ app.put('/', async (req,res) => {
 
     console.log("updated")
 
-  }finally{
-    await client.close();
-  }
-});
-
-//ROUTES FOR PORTFOLIO PAGE
-app.get('/portfolio', async (req,res) => {
-
-  try {
-    //connect to db
-    await client.connect();
-
-    const colli = client.db('Coinstack').collection('CoinstackMyPortfolio');
-    const myList = await colli.find({}).toArray();
-
-    //send back file
-    res.status(200).send(myList);
-  } catch(error){
-    console.log(error);
-    res.status(500).send({
-      error: 'something went wrong',
-      value: error
-    });
   }finally{
     await client.close();
   }
