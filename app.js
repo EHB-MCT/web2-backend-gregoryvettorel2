@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 const {MongoClient} = require('mongodb');
 const config = require('./config.json');
 const cors = require('cors');
+const path = require('path');
 
 //Mongo client
 const client = new MongoClient(config.finalUrl);
@@ -20,7 +21,7 @@ app.use(bodyParser.urlencoded({
 
 //landing page
 app.get('/', (req, res) => {
-  res.status(300).redirect('/info.html');
+res.sendFile(path.join(__dirname, '/public/info.html'));
 });
 
 //ROUTES FOR MY LIST PAGE
