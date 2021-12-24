@@ -200,38 +200,6 @@ app.delete('/portfolio/:symbol', async (req,res) => {
 
 });
 
-//to do
-app.put('/', async (req,res) => {
-  try {
-    await client.connect();
-
-    const colli = client.db('Gamification').collection('Challenge');
-
-  //Check if already exists
-  /** 
-    const chlng = await colli.findOne({name: req.body.name});
-      if(chlng.name == req.body.name && chlng.course == req.body.course && chlng.points == req.body.points && chlng.session == req.body.session){
-        res.status(400).send('Bad request: no value to update, please enter a different value');
-        return;
-        }
-    */
-
-    const chlng2 = await colli.findOne({name: req.body.name});
-
-    await colli.updateOne({
-      name: req.body.name,
-      course: req.body.course,
-      points: req.body.points,
-      session: req.body.session
-    })
-
-    console.log("updated")
-
-  }finally{
-    await client.close();
-  }
-});
-
 //APP LISTEN VERIFICATION
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`)
